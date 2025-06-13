@@ -195,13 +195,6 @@
             <p>Gestión de Licitaciones y Procurement</p>
         </div>
         
-        <div class="credentials-info">
-            <small>
-                <i class="bi bi-info-circle me-1"></i>
-                Usuario: <strong>procurement</strong> | Contraseña: <strong>procurement</strong>
-            </small>
-        </div>
-        
         <div id="alertContainer"></div>
         
         <form id="loginForm">
@@ -236,11 +229,9 @@
             const loadingSpinner = document.querySelector('.loading-spinner');
             const btnText = document.querySelector('.btn-text');
             const alertContainer = document.getElementById('alertContainer');
-            
-            // Auto-fill credentials for demo
-            document.getElementById('username').value = 'procurement';
-            document.getElementById('password').value = 'procurement';
-            
+                      // Auto-fill credentials for demo
+            // document.getElementById(\'username\').value = \'procurement\';
+            // document.getElementById(\'password\').value = \'procurement\';        
             loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
