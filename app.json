@@ -1,0 +1,65 @@
+{
+  "name": "Sistema de Gestión de Compras y Licitaciones",
+  "description": "Sistema web completo para la gestión de procesos de compra y licitaciones",
+  "repository": "https://github.com/tu-usuario/procurement-app",
+  "logo": "https://via.placeholder.com/200x200/0d6efd/ffffff?text=SGL",
+  "keywords": [
+    "flask",
+    "procurement",
+    "licitaciones",
+    "compras",
+    "python",
+    "bootstrap"
+  ],
+  "website": "https://tu-app.herokuapp.com",
+  "success_url": "/",
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini",
+      "as": "DATABASE"
+    }
+  ],
+  "env": {
+    "SECRET_KEY": {
+      "description": "Clave secreta para Flask (generar una aleatoria)",
+      "generator": "secret"
+    },
+    "FLASK_ENV": {
+      "description": "Entorno de Flask",
+      "value": "production"
+    },
+    "DATABASE_URL": {
+      "description": "URL de la base de datos PostgreSQL (automática)",
+      "required": false
+    }
+  },
+  "scripts": {
+    "postdeploy": "python init_db.py"
+  },
+  "environments": {
+    "test": {
+      "addons": [
+        "heroku-postgresql:mini"
+      ],
+      "env": {
+        "FLASK_ENV": "testing"
+      },
+      "scripts": {
+        "test": "python -m pytest"
+      }
+    }
+  }
+}
+

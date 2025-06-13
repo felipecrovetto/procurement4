@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Script de configuración post-deploy para Heroku
+echo "Iniciando configuración post-deploy..."
+
+# Crear directorios necesarios
+mkdir -p src/uploads
+mkdir -p src/logs
+mkdir -p backups
+
+# Configurar permisos
+chmod 755 src/uploads
+chmod 755 src/logs
+chmod 755 backups
+
+# Inicializar base de datos si es necesario
+echo "Inicializando base de datos..."
+python init_db.py
+
+echo "Configuración post-deploy completada ✅"
+

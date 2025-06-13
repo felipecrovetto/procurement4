@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Compras y Licitaciones</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" onclick="showSection('dashboard')">
+                <i class="bi bi-building"></i>
+                Sistema de Compras
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('dashboard')">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('processes')">
+                            <i class="bi bi-list-task"></i> Procesos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('suppliers')">
+                            <i class="bi bi-people"></i> Proveedores
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('bids')">
+                            <i class="bi bi-file-earmark-text"></i> Ofertas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('evaluation')">
+                            <i class="bi bi-clipboard-check"></i> Evaluación
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('documents')">
+                            <i class="bi bi-folder"></i> Documentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('alerts')">
+                            <i class="bi bi-bell"></i> Alertas
+                            <span id="alertBadge" class="badge bg-danger ms-1" style="display: none;">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('calendar')">
+                            <i class="bi bi-calendar"></i> Calendario
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('excel')">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('reports')">
+                            <i class="bi bi-graph-up"></i> Reportes
+                        </a>
+                    </li>
+                </ul>
+                <div class="navbar-nav">
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> Sistema
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+                </div>
+            </div>
+            
+            <!-- KPI Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="totalProcesses">0</h4>
+                                    <p class="mb-0">Procesos</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-list-task fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="totalSuppliers">0</h4>
+                                    <p class="mb-0">Proveedores</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-people fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="totalBids">0</h4>
+                                    <p class="mb-0">Ofertas</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-file-earmark-text fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4 id="activeAlerts">0</h4>
+                                    <p class="mb-0">Alertas Activas</p>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-bell fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Card -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card bg-gradient-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 id="totalSavings">$0</h3>
+                                    <p class="mb-0">Ahorro Total Estimado</p>
+                                    <small class="opacity-75">Diferencia entre presupuesto y ofertas adjudicadas</small>
+                                </div>
+                                <div class="align-self-center">
+                                    <i class="bi bi-piggy-bank fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Distribución por Estado</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Ahorro por Proceso</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="savingsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Charts Row -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Top 5 Proveedores</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="topSuppliersChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Tendencia Mensual</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="monthlyTrendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Processes and Active Alerts -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Procesos Recientes</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentProcesses">
+                                <p class="text-muted">Cargando...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Alertas Activas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="activeAlertsList">
+                                <p class="text-muted">Cargando...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processes Section -->
+        <div id="processes" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-list-task"></i> Gestión de Procesos</h2>
+                        <button class="btn btn-primary" onclick="showProcessModal()">
+                            <i class="bi bi-plus"></i> Nuevo Proceso
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="processSearch" placeholder="Buscar procesos...">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="processStatusFilter">
+                        <option value="">Todos los estados</option>
+                        <option value="draft">Borrador</option>
+                        <option value="active">Activo</option>
+                        <option value="evaluation">Evaluación</option>
+                        <option value="completed">Completado</option>
+                        <option value="cancelled">Cancelado</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="processTypeFilter">
+                        <option value="">Todos los tipos</option>
+                        <option value="simple_purchase">Compra Simple</option>
+                        <option value="large_tender">Licitación Grande</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-primary" onclick="loadProcesses()">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button class="btn btn-outline-success" onclick="exportProcesses()">
+                        <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Processes Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Título</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Presupuesto</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="processesTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav id="processesPagination"></nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suppliers Section -->
+        <div id="suppliers" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-people"></i> Gestión de Proveedores</h2>
+                        <button class="btn btn-primary" onclick="showSupplierModal()">
+                            <i class="bi bi-plus"></i> Nuevo Proveedor
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="supplierSearch" placeholder="Buscar proveedores...">
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" id="supplierStatusFilter">
+                        <option value="">Todos los estados</option>
+                        <option value="active">Activo</option>
+                        <option value="inactive">Inactivo</option>
+                        <option value="blacklisted">Lista Negra</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-outline-primary" onclick="loadSuppliers()">
+                        <i class="bi bi-search"></i> Filtrar
+                    </button>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-success" onclick="exportSuppliers()">
+                        <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Suppliers Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Contacto</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>RUT</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="suppliersTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav id="suppliersPagination"></nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bids Section -->
+        <div id="bids" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-file-earmark-text"></i> Gestión de Ofertas</h2>
+                        <button class="btn btn-primary" onclick="showBidModal()">
+                            <i class="bi bi-plus"></i> Nueva Oferta
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bids Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Proceso</th>
+                                    <th>Proveedor</th>
+                                    <th>Monto</th>
+                                    <th>Puntuación Total</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bidsTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav id="bidsPagination"></nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evaluation Section -->
+        <div id="evaluation" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-clipboard-check"></i> Evaluación Técnica-Económica</h2>
+                        <div>
+                            <select class="form-select d-inline-block w-auto me-2" id="evaluationProcessSelect">
+                                <option value="">Seleccionar Proceso</option>
+                            </select>
+                            <button class="btn btn-success" onclick="generateRanking()">
+                                <i class="bi bi-trophy"></i> Generar Ranking
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evaluation Tabs -->
+            <ul class="nav nav-tabs" id="evaluationTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="criteria-tab" data-bs-toggle="tab" data-bs-target="#criteria" type="button" role="tab">
+                        Criterios de Evaluación
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="evaluation-tab" data-bs-toggle="tab" data-bs-target="#evaluation-panel" type="button" role="tab">
+                        Evaluación de Ofertas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="ranking-tab" data-bs-toggle="tab" data-bs-target="#ranking" type="button" role="tab">
+                        Ranking Final
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="evaluationTabContent">
+                <!-- Criteria Tab -->
+                <div class="tab-pane fade show active" id="criteria" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Criterios de Evaluación</h5>
+                            <button class="btn btn-primary btn-sm" onclick="showCriteriaModal()">
+                                <i class="bi bi-plus"></i> Nuevo Criterio
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="criteriaList">
+                                <p class="text-muted">Seleccione un proceso para ver los criterios</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evaluation Tab -->
+                <div class="tab-pane fade" id="evaluation-panel" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Evaluación de Ofertas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="evaluationList">
+                                <p class="text-muted">Seleccione un proceso para evaluar ofertas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ranking Tab -->
+                <div class="tab-pane fade" id="ranking" role="tabpanel">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>Ranking Final de Ofertas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="rankingList">
+                                <p class="text-muted">Seleccione un proceso para ver el ranking</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div id="documents" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-folder"></i> Gestión de Documentos</h2>
+                        <button class="btn btn-primary" onclick="showDocumentModal()">
+                            <i class="bi bi-upload"></i> Subir Documento
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Proceso</th>
+                                    <th>Proveedor</th>
+                                    <th>Tamaño</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documentsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav id="documentsPagination"></nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div id="alerts" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-bell"></i> Gestión de Alertas</h2>
+                        <div>
+                            <button class="btn btn-warning" onclick="checkDeadlines()">
+                                <i class="bi bi-clock"></i> Verificar Vencimientos
+                            </button>
+                            <button class="btn btn-primary" onclick="showAlertModal()">
+                                <i class="bi bi-plus"></i> Nueva Alerta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alerts Table -->
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Tipo</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Proceso</th>
+                                    <th>Fecha</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alertsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav id="alertsPagination"></nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div id="calendar" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2><i class="bi bi-calendar"></i> Calendario de Hitos</h2>
+                        <div>
+                            <button class="btn btn-outline-primary" onclick="refreshCalendar()">
+                                <i class="bi bi-arrow-clockwise"></i> Actualizar
+                            </button>
+                            <button class="btn btn-primary" onclick="showMilestoneModal()">
+                                <i class="bi bi-plus"></i> Nuevo Hito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Filters -->
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <select class="form-select" id="calendarProcessFilter">
+                        <option value="">Todos los procesos</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="calendarMilestoneFilter">
+                        <option value="">Todos los hitos</option>
+                        <option value="start">Inicio</option>
+                        <option value="end">Fin</option>
+                        <option value="award">Adjudicación</option>
+                        <option value="delivery">Entrega</option>
+                        <option value="evaluation">Evaluación</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="calendarStatusFilter">
+                        <option value="">Todos los estados</option>
+                        <option value="upcoming">Próximos</option>
+                        <option value="overdue">Vencidos</option>
+                        <option value="completed">Completados</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-outline-primary" onclick="applyCalendarFilters()">
+                        <i class="bi bi-funnel"></i> Filtrar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calendar Legend -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body py-2">
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="badge bg-primary me-2" style="width: 15px; height: 15px;"></div>
+                                    <small>Inicio</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="badge bg-danger me-2" style="width: 15px; height: 15px;"></div>
+                                    <small>Fin</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="badge bg-success me-2" style="width: 15px; height: 15px;"></div>
+                                    <small>Adjudicación</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="badge bg-warning me-2" style="width: 15px; height: 15px;"></div>
+                                    <small>Entrega</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="badge bg-info me-2" style="width: 15px; height: 15px;"></div>
+                                    <small>Evaluación</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="badge bg-secondary me-2" style="width: 15px; height: 15px;"></div>
+                                    <small>Otros</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Container -->
+            <div class="card">
+                <div class="card-body">
+                    <div id="calendar-container"></div>
+                </div>
+            </div>
+
+            <!-- Upcoming Milestones -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Próximos Vencimientos</h5>
+                            <span class="badge bg-warning" id="upcomingCount">0</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="upcomingMilestones">
+                                <p class="text-muted">No hay vencimientos próximos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Hitos Vencidos</h5>
+                            <span class="badge bg-danger" id="overdueCount">0</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="overdueMilestones">
+                                <p class="text-muted">No hay hitos vencidos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Excel Section -->
+        <div id="excel" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-file-earmark-excel"></i> Gestión de Archivos Excel</h2>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <!-- Upload Section -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Subir Archivo Excel</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="excelUploadForm">
+                                <div class="mb-3">
+                                    <label for="excelFile" class="form-label">Archivo Excel</label>
+                                    <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tableType" class="form-label">Tipo de Tabla</label>
+                                    <select class="form-select" id="tableType" required>
+                                        <option value="">Seleccionar tipo...</option>
+                                        <option value="process_tracking">Seguimiento de Procesos</option>
+                                        <option value="technical_evaluation">Evaluación Técnica</option>
+                                        <option value="commercial_comparison">Comparación Comercial</option>
+                                        <option value="supplier_evaluation">Evaluación de Proveedores</option>
+                                        <option value="savings_analysis">Análisis de Ahorros</option>
+                                        <option value="questions_answers">Consultas y Respuestas</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-upload"></i> Subir y Procesar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates Section -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Descargar Plantillas</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">Descarga las plantillas Excel para cada tipo de análisis:</p>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-success" onclick="downloadTemplate('process_tracking')">
+                                    <i class="bi bi-download"></i> Seguimiento de Procesos
+                                </button>
+                                <button class="btn btn-outline-success" onclick="downloadTemplate('technical_evaluation')">
+                                    <i class="bi bi-download"></i> Evaluación Técnica
+                                </button>
+                                <button class="btn btn-outline-success" onclick="downloadTemplate('commercial_comparison')">
+                                    <i class="bi bi-download"></i> Comparación Comercial
+                                </button>
+                                <button class="btn btn-outline-success" onclick="downloadTemplate('supplier_evaluation')">
+                                    <i class="bi bi-download"></i> Evaluación de Proveedores
+                                </button>
+                                <button class="btn btn-outline-success" onclick="downloadTemplate('savings_analysis')">
+                                    <i class="bi bi-download"></i> Análisis de Ahorros
+                                </button>
+                                <button class="btn btn-outline-success" onclick="downloadTemplate('questions_answers')">
+                                    <i class="bi bi-download"></i> Consultas y Respuestas
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Excel Data Display -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Datos Procesados</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <select class="form-select" id="excelDataType" onchange="loadExcelData()">
+                            <option value="">Seleccionar tipo de datos...</option>
+                            <option value="process_tracking">Seguimiento de Procesos</option>
+                            <option value="technical_evaluation">Evaluación Técnica</option>
+                            <option value="commercial_comparison">Comparación Comercial</option>
+                            <option value="supplier_evaluation">Evaluación de Proveedores</option>
+                            <option value="savings_analysis">Análisis de Ahorros</option>
+                            <option value="questions_answers">Consultas y Respuestas</option>
+                        </select>
+                    </div>
+                    <div id="excelDataDisplay">
+                        <p class="text-muted">Selecciona un tipo de datos para visualizar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="content-section" style="display: none;">
+            <div class="row">
+                <div class="col-12">
+                    <h2><i class="bi bi-graph-up"></i> Reportes y Análisis</h2>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Tendencias de Procesos</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Análisis por Proceso</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <select class="form-select" id="processAnalysisSelect">
+                                    <option value="">Seleccionar proceso...</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateProcessAnalysis()">
+                                <i class="bi bi-graph-up"></i> Generar Análisis
+                            </button>
+                            <div id="processAnalysisResult" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Process Modal -->
+    <div class="modal fade" id="processModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Gestión de Proceso</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="processForm">
+                        <input type="hidden" id="processId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="processNumber" class="form-label">Número de Proceso *</label>
+                                    <input type="text" class="form-control" id="processNumber" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="processType" class="form-label">Tipo de Proceso *</label>
+                                    <select class="form-select" id="processType" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="simple_purchase">Compra Simple</option>
+                                        <option value="large_tender">Licitación Grande</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="processTitle" class="form-label">Título *</label>
+                            <input type="text" class="form-control" id="processTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="processDescription" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="processDescription" rows="3"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="processStatus" class="form-label">Estado</label>
+                                    <select class="form-select" id="processStatus">
+                                        <option value="draft">Borrador</option>
+                                        <option value="active">Activo</option>
+                                        <option value="evaluation">Evaluación</option>
+                                        <option value="completed">Completado</option>
+                                        <option value="cancelled">Cancelado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="processBudget" class="form-label">Presupuesto</label>
+                                    <input type="number" class="form-control" id="processBudget" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="processStartDate" class="form-label">Fecha de Inicio</label>
+                                    <input type="datetime-local" class="form-control" id="processStartDate">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="processEndDate" class="form-label">Fecha de Fin</label>
+                                    <input type="datetime-local" class="form-control" id="processEndDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="processNotes" class="form-label">Notas</label>
+                            <textarea class="form-control" id="processNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProcess()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supplier Modal -->
+    <div class="modal fade" id="supplierModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Gestión de Proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="supplierForm">
+                        <input type="hidden" id="supplierId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="supplierName" class="form-label">Nombre *</label>
+                                    <input type="text" class="form-control" id="supplierName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="supplierRut" class="form-label">RUT</label>
+                                    <input type="text" class="form-control" id="supplierRut">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="supplierContact" class="form-label">Persona de Contacto</label>
+                                    <input type="text" class="form-control" id="supplierContact">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="supplierEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="supplierEmail">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="supplierPhone" class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control" id="supplierPhone">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="supplierStatus" class="form-label">Estado</label>
+                                    <select class="form-select" id="supplierStatus">
+                                        <option value="active">Activo</option>
+                                        <option value="inactive">Inactivo</option>
+                                        <option value="blacklisted">Lista Negra</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="supplierAddress" class="form-label">Dirección</label>
+                            <textarea class="form-control" id="supplierAddress" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="supplierNotes" class="form-label">Notas</label>
+                            <textarea class="form-control" id="supplierNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSupplier()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-2 mb-0">Procesando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
+
